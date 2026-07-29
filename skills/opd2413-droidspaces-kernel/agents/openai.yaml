@@ -1,0 +1,13 @@
+interface:
+  display_name: OPD2413 DroidSpaces Kernel
+  short_description: "\u6784\u5EFA\u5E76\u6838\u9A8C OPD2413 DroidSpaces \u5185\u6838\
+    \u4E0E GKI \u56DE\u9000\u5305"
+  default_prompt: Use $opd2413-droidspaces-kernel to build and verify a version-matched
+    OPD2413 DroidSpaces kernel or official GKI rollback package.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
