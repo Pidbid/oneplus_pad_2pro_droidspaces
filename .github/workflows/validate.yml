@@ -1,0 +1,31 @@
+name: Validate project
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check shell syntax
+        run: bash -n skills/opd2413-droidspaces-kernel/scripts/*.sh
+      - name: Check artifact manifests
+        run: |
+          jq -e . artifacts.json >/dev/null
+          jq -e . skills/opd2413-droidspaces-kernel/references/artifacts.json >/dev/null
+          cmp artifacts.json skills/opd2413-droidspaces-kernel/references/artifacts.json
+      - name: Check recorded package hashes
+        run: |
+          test "$(wc -l < SHA256SUMS)" -eq 4
+          jq -r '.artifacts[] | "\(.package_sha256)  \(.file)"' artifacts.json |
+            diff -u SHA256SUMS -
+      - name: Check Skill frontmatter
+        run: |
+          head -n 1 skills/opd2413-droidspaces-kernel/SKILL.md | grep -qx -- '---'
+          grep -qx 'name: opd2413-droidspaces-kernel' \
+            skills/opd2413-droidspaces-kernel/SKILL.md
